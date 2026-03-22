@@ -1,4 +1,4 @@
-# kd-wfm
+# wfm
 
 Kody's Workflow Manager — a personal CLI tool for managing workflow machine operations and automating workflow tasks.
 
