@@ -14,9 +14,9 @@ The system SHALL initialize a valid Go module for the kd-wfm project with proper
 ### Requirement: Project directory structure
 The system SHALL create a standard Go project directory structure following community best practices.
 
-#### Scenario: Command directory exists
+#### Scenario: Main entry point at root
 - **WHEN** the project is initialized
-- **THEN** a `cmd/kd-wfm/` directory SHALL exist for the main entry point
+- **THEN** a `main.go` file SHALL exist at the repository root as the entry point
 
 #### Scenario: Internal package directory exists
 - **WHEN** the project is initialized
@@ -31,7 +31,7 @@ The system SHALL provide a main.go file that serves as the CLI application entry
 
 #### Scenario: Main file exists
 - **WHEN** the project is initialized
-- **THEN** a `cmd/kd-wfm/main.go` file SHALL exist
+- **THEN** a `main.go` file SHALL exist at the repository root
 
 #### Scenario: Main function executes root command
 - **WHEN** the main function runs
