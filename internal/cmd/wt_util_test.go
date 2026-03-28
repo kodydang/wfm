@@ -36,3 +36,19 @@ func TestRepoContainerFromMainPath(t *testing.T) {
 		t.Errorf("got %q, want %q", got, "/projects/my-app")
 	}
 }
+
+func TestRepoContainerFromMainPath_EdgeCases(t *testing.T) {
+	cases := []struct {
+		input string
+		want  string
+	}{
+		{"/main", "/"},
+		{"main", "."},
+	}
+	for _, c := range cases {
+		got := repoContainerFromMainPath(c.input)
+		if got != c.want {
+			t.Errorf("repoContainerFromMainPath(%q) = %q, want %q", c.input, got, c.want)
+		}
+	}
+}

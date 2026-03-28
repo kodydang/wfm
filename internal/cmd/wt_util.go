@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -29,7 +30,7 @@ func repoContainerFromMainPath(mainPath string) string {
 func repoContainer() (string, error) {
 	out, err := exec.Command("git", "worktree", "list", "--porcelain").Output()
 	if err != nil {
-		return "", errors.New("not inside a git worktree — cd into a worktree first")
+		return "", fmt.Errorf("not inside a git worktree — cd into a worktree first: %w", err)
 	}
 	mainPath, err := parseMainWorktreePath(string(out))
 	if err != nil {
