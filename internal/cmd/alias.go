@@ -39,6 +39,24 @@ var aliasCmd = &cobra.Command{
 			}
 		}
 
+		// gwt() shell function
+		const gwtHeader = "gwt() {"
+		const gwtFunction = `gwt() {
+  case "$1" in
+    clone)  kd-wfm wt-clone "${@:2}" ;;
+    add)    kd-wfm wt-add -b "${@:2}" ;;
+    switch) cd "$(kd-wfm wt-switch "${@:2}")" ;;
+    rm)     kd-wfm wt-rm "${@:2}" ;;
+    *)      echo "gwt: unknown command '$1'" >&2; return 1 ;;
+  esac
+}`
+		fmt.Println(gwtHeader)
+		if gwtFunctionPresent(zshrc, gwtHeader) {
+			fmt.Printf("  already in %s, skipping\n", zshrc)
+		} else {
+			toAppend.WriteString(gwtFunction + "\n")
+		}
+
 		if toAppend.Len() == 0 {
 			fmt.Println("\nAll aliases already present — nothing to append.")
 			return nil
@@ -74,6 +92,13 @@ func existingKdAliases(path string) map[string]bool {
 		}
 	}
 	return found
+}
+
+// gwtFunctionPresent checks if the gwt() function header line exists in path.
+func gwtFunctionPresent(path, header string) bool {
+	out, err := exec.Command("grep", "-qF", header, path).CombinedOutput()
+	_ = out
+	return err == nil
 }
 
 func init() {
