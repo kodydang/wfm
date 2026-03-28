@@ -31,6 +31,7 @@ var wtCloneCmd = &cobra.Command{
 		c.Stdout = os.Stdout
 		c.Stderr = os.Stderr
 		if err := c.Run(); err != nil {
+			_ = os.RemoveAll(dest)
 			return fmt.Errorf("git clone failed: %w", err)
 		}
 
