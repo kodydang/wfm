@@ -23,6 +23,16 @@ var wtRmCmd = &cobra.Command{
 
 		dest := filepath.Join(container, filepath.FromSlash(branch))
 
+		// Get the main worktree path before we delete anything
+		out, err := exec.Command("git", "worktree", "list", "--porcelain").Output()
+		if err != nil {
+			return fmt.Errorf("could not get worktree list: %w", err)
+		}
+		mainPath, err := parseMainWorktreePath(string(out))
+		if err != nil {
+			return err
+		}
+
 		// Remove the worktree (--force handles unmerged changes)
 		rm := exec.Command("git", "worktree", "remove", "--force", dest)
 		rm.Stdout = os.Stdout
@@ -31,8 +41,8 @@ var wtRmCmd = &cobra.Command{
 			return fmt.Errorf("git worktree remove failed: %w", err)
 		}
 
-		// Delete the branch
-		del := exec.Command("git", "branch", "-D", branch)
+		// Delete the branch (run from main worktree so cwd doesn't matter after worktree removal)
+		del := exec.Command("git", "-C", mainPath, "branch", "-D", branch)
 		del.Stdout = os.Stdout
 		del.Stderr = os.Stderr
 		if err := del.Run(); err != nil {
